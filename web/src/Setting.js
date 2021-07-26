@@ -2,6 +2,8 @@ import {message} from "antd";
 import React from "react";
 import {isMobile as isMobileDevice} from "react-device-detect";
 
+export let CdnBaseUrl = 'https://cdn.open-ct.com';
+
 export let ServerUrl = '';
 
 export function initServerUrl() {
@@ -17,6 +19,11 @@ export function parseJson(s) {
   } else {
     return JSON.parse(s);
   }
+}
+
+export function myParseInt(i) {
+  const res = parseInt(i);
+  return isNaN(res) ? 0 : res;
 }
 
 export function openLink(link) {
@@ -39,9 +46,48 @@ export function showMessage(type, text) {
   }
 }
 
+export function isAdminUser(account) {
+  return account?.isAdmin;
+}
+
+export function deepCopy(obj) {
+  return Object.assign({}, obj);
+}
+
+export function addRow(array, row) {
+  return [...array, row];
+}
+
+export function prependRow(array, row) {
+  return [row, ...array];
+}
+
+export function deleteRow(array, i) {
+  // return array = array.slice(0, i).concat(array.slice(i + 1));
+  return [...array.slice(0, i), ...array.slice(i + 1)];
+}
+
+export function swapRow(array, i, j) {
+  return [...array.slice(0, i), array[j], ...array.slice(i + 1, j), array[i], ...array.slice(j + 1)];
+}
+
 export function isMobile() {
   // return getIsMobileView();
   return isMobileDevice;
+}
+
+export function getFormattedDate(date) {
+  if (date === undefined || date === null) {
+    return null;
+  }
+
+  date = date.replace('T', ' ');
+  date = date.replace('+08:00', ' ');
+  return date;
+}
+
+export function getFormattedDateShort(date) {
+  return date.slice(0, 10);
 }
 
 export function getShortName(s) {
