@@ -36,4 +36,9 @@ func initAPI() {
 	beego.Router("/api/add-submission", &controllers.ApiController{}, "POST:AddSubmission")
 	beego.Router("/api/delete-submission", &controllers.ApiController{}, "POST:DeleteSubmission")
 	beego.Router("/api/upload-submission-file", &controllers.ApiController{}, "POST:UploadSubmissionFile")
+
+	beego.Router("/api/get-reviewer", &controllers.ApiController{}, "GET:GetReviewer")
+	beego.Router("/api/send-signup-mail", &controllers.ApiController{}, "GET:SendSignupMail")
+	beego.Router("/api/review-paper", &controllers.ApiController{}, "GET:ReviewPaper")
+
 }

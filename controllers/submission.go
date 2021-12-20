@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-
 	"github.com/casbin/confita/object"
 )
 
@@ -14,9 +13,10 @@ func (c *ApiController) GetSubmissions() {
 }
 
 func (c *ApiController) GetSubmission() {
-	id := c.Input().Get("id")
+	submissionName := c.Input().Get("name")
+	owner := c.Input().Get("owner")
 
-	c.Data["json"] = object.GetSubmission(id)
+	c.Data["json"] = object.GetSubmission(owner, submissionName)
 	c.ServeJSON()
 }
 

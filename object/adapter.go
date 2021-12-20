@@ -10,6 +10,8 @@ import (
 )
 
 var adapter *Adapter
+var CasdoorOrganization string
+var CasdoorApplication string
 
 func InitConfig() {
 	err := beego.LoadAppConfig("ini", "../conf/app.conf")
@@ -21,13 +23,18 @@ func InitConfig() {
 }
 
 func InitAdapter() {
-	adapter = NewAdapter("mysql", beego.AppConfig.String("dataSourceName"))
+	adapter = NewAdapter(beego.AppConfig.String("driverName"), beego.AppConfig.String("dataSourceName"), beego.AppConfig.String("dbName"))
+	adapter.createTable()
+
+	CasdoorOrganization = beego.AppConfig.String("casdoorOrganization")
+	CasdoorApplication = beego.AppConfig.String("casdoorApplication")
 }
 
 // Adapter represents the MySQL adapter for policy storage.
 type Adapter struct {
 	driverName     string
 	dataSourceName string
+	dbName         string
 	engine         *xorm.Engine
 }
 
@@ -40,10 +47,11 @@ func finalizer(a *Adapter) {
 }
 
 // NewAdapter is the constructor for Adapter.
-func NewAdapter(driverName string, dataSourceName string) *Adapter {
+func NewAdapter(driverName string, dataSourceName string, dbName string) *Adapter {
 	a := &Adapter{}
 	a.driverName = driverName
 	a.dataSourceName = dataSourceName
+	a.dbName = dbName
 
 	// Open the DB, create it if not existed.
 	a.open()
@@ -91,6 +99,25 @@ func (a *Adapter) createTable() {
 	}
 
 	err = a.engine.Sync2(new(Submission))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(Author))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(Reviewer))
+	if err != nil {
+		panic(err)
+	}
+
+	err = a.engine.Sync2(new(ReviewerAttr))
+	if err != nil {
+		panic(err)
+	}
+	err = a.engine.Sync2(new(ReviewerAttrVal))
 	if err != nil {
 		panic(err)
 	}
